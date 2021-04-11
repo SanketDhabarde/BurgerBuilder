@@ -13,40 +13,56 @@ const INGREDIENT_PRICE = {
     meat: 1.2
 }
 
+const addIngredient = (state, action) => {
+    return {
+        ...state,
+        ingredients:{
+            ...state.ingredients,
+            [action.ingredientName]: state.ingredients[action.ingredientName] + 1
+        },
+        totalPrice: state.totalPrice + INGREDIENT_PRICE[action.ingredientName]
+    };
+};
+
+const removeIngredient = (state, action) => {
+    return {
+        ...state,
+        ingredients: {
+            ...state.ingredients,
+            [action.ingredientName]: state.ingredients[action.ingredientName] - 1
+        },
+        totalPrice: state.totalPrice - INGREDIENT_PRICE[action.ingredientName]
+    };
+};
+
+const setIngredients = (state, action) => {
+    return {
+        ...state,
+        ingredients: {
+            salad: action.ingredients.salad,
+            cheese: action.ingredients.cheese,
+            bacon: action.ingredients.bacon,
+            meat: action.ingredients.meat
+        },
+        totalPrice:4,
+        error:false
+    };
+};
+
+const fetchIngredientsFailed = (state, action) => {
+    return{
+        ...state,
+        error:true
+    };
+};
+
 const reducer = (state = initialState, action) => {
     switch(action.type){
-        case actionsTypes.ADD_INCREDIENT:
-            return{
-                ...state,
-                ingredients:{
-                    ...state.ingredients,
-                    [action.ingredientName]: state.ingredients[action.ingredientName] + 1
-                },
-                totalPrice: state.totalPrice + INGREDIENT_PRICE[action.ingredientName]
-            }
-        case actionsTypes.REMOVE_INGREDIENT:
-            return{
-                ...state,
-                ingredients: {
-                    ...state.ingredients,
-                    [action.ingredientName]: state.ingredients[action.ingredientName] - 1
-                },
-                totalPrice: state.totalPrice - INGREDIENT_PRICE[action.ingredientName]
-            }
-        case actionsTypes.SET_INGREDIENTS:
-            return{
-                ...state,
-                ingredients: action.ingredients,
-                totalPrice:4,
-                error:false
-            }
-        case actionsTypes.FETCH_INGREDIENTS_FAILED:
-            return{
-                ...state,
-                error:true
-            }
-        default:
-            return state;
+        case actionsTypes.ADD_INCREDIENT: return addIngredient(state, action);
+        case actionsTypes.REMOVE_INGREDIENT: return removeIngredient(state, action);
+        case actionsTypes.SET_INGREDIENTS: return setIngredients(state, action);
+        case actionsTypes.FETCH_INGREDIENTS_FAILED: return fetchIngredientsFailed(state, action);
+        default: return state;
     }
 }
 
